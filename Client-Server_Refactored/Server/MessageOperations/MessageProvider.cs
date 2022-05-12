@@ -4,7 +4,7 @@ namespace Client_Server_Refactored.Server
 {
     internal class MessageProvider
     {
-        private Client _client;
+        private Client _client; //TODO useless here. Delete later
         private MessageSerializer _serializer;
 
         private NetworkStream _stream;
