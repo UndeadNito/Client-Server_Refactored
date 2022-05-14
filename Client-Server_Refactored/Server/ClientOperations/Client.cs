@@ -22,12 +22,27 @@ namespace Client_Server_Refactored.Server
 
         public void LogOut() => loggedIn = false;
 
-        public void CacheLogInData(string login, string salt, string password, byte privelege)
+        public void CacheLogInData(ClientLogInData data)
         {
-            _login = login;
-            _salt = salt;
-            _password = password;
-            _privelege = privelege;
+            cachedLodInData = data;
+        }
+    }
+
+    public struct ClientLogInData
+    {
+        public readonly int id;
+        public readonly string login;
+        public readonly string salt;
+        public readonly string password;
+        public readonly byte privelege;
+
+        public ClientLogInData(int id, string login, string salt, string password, byte privelege)
+        {
+            this.id = id;
+            this.login = login;
+            this.salt = salt;
+            this.password = password;
+            this.privelege = privelege;
         }
     }
 }
