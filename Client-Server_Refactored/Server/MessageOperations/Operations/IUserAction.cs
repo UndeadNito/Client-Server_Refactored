@@ -1,6 +1,6 @@
 ﻿namespace Client_Server_Refactored.Server
 {
-    internal interface IMessageOperation
+    internal interface IUserAction
     {
         public bool Handle(Dictionary<string, string> message);
     }

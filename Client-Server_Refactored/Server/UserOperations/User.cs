@@ -1,20 +1,13 @@
-﻿using System.Net.Sockets;
-
-namespace Client_Server_Refactored.Server
+﻿namespace Client_Server_Refactored.Server
 {
-    internal class Client
+    internal class User
     {
-        public readonly TcpClient client;
+        public UserLogInData cachedLodInData;
 
         public bool loggedIn { get; private set; }
-        private string? _login;
-        private string? _salt;
-        private string? _password;
-        private byte? _privelege;
 
-        public Client(TcpClient client)
+        public User()
         {
-            this.client = client;
             loggedIn = false;
         }
 
@@ -22,13 +15,13 @@ namespace Client_Server_Refactored.Server
 
         public void LogOut() => loggedIn = false;
 
-        public void CacheLogInData(ClientLogInData data)
+        public void CacheLogInData(UserLogInData data)
         {
             cachedLodInData = data;
         }
     }
 
-    public struct ClientLogInData
+    public struct UserLogInData
     {
         public readonly int id;
         public readonly string login;
@@ -36,7 +29,7 @@ namespace Client_Server_Refactored.Server
         public readonly string password;
         public readonly byte privelege;
 
-        public ClientLogInData(int id, string login, string salt, string password, byte privelege)
+        public UserLogInData(int id, string login, string salt, string password, byte privelege)
         {
             this.id = id;
             this.login = login;

@@ -1,10 +1,11 @@
 ﻿namespace Client_Server_Refactored.Server
 {
-    internal enum ClientActions
+    internal enum UserActions
     {
         Login,
         Logout,
         Relogin,
+        GetData,
 
 
     }

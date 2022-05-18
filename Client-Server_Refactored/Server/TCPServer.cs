@@ -9,26 +9,23 @@ namespace Client_Server_Refactored.Server
         private static readonly IPAddress _localAddress = IPAddress.Parse("127.0.0.1");
 
         private readonly TcpListener _listener;
+        private readonly UserManager _manager;
 
         private static TCPServer? _server;
         private static bool _isActive = false;
         
-        private TCPServer()
+        public TCPServer()
         { 
             _listener = new TcpListener(_localAddress, _localPort);
-        }
-
-        public static TCPServer GetTCPServer()
-        {
-            if (_server == null) _server = new TCPServer();
-
-            return _server;
+            _manager = UserManager.GetManager();
         }
 
         public void Start()
         {
             _listener.Start();
             _isActive = true;
+
+            new Thread(new ThreadStart(MainLoop)).Start();
         }
 
         public void Stop() 
@@ -39,10 +36,18 @@ namespace Client_Server_Refactored.Server
 
         public bool GetState() { return _isActive; }
 
-        public TcpClient? GetClient()
+        public void TryAddUser()
         {
-            if (_listener.Pending()) return _listener.AcceptTcpClient();
-            return null;
+            if (_listener.Pending()) 
+                _manager.AddUser(_listener.AcceptTcpClient());
+        }
+
+        private void MainLoop()
+        {
+            while (_isActive)
+            {
+                TryAddUser();
+            }
         }
     }
 }

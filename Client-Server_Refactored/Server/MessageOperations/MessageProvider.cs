@@ -4,16 +4,11 @@ namespace Client_Server_Refactored.Server
 {
     internal class MessageProvider
     {
-        private Client _client; //TODO useless here. Delete later
-        private MessageSerializer _serializer;
-
         private NetworkStream _stream;
 
-        public MessageProvider(Client client)
+        public MessageProvider(NetworkStream stream)
         {
-            _client = client;
-            _stream = client.client.GetStream();
-            _serializer = new MessageSerializer();
+            _stream = stream;
         }
         
         public bool GetMessage()
@@ -25,7 +20,7 @@ namespace Client_Server_Refactored.Server
             Span<byte> message = stackalloc byte[dataLength];
             _stream.Read(message);
 
-            var parsedMessage = _serializer.Deserialize(message); //TODO create MessageOperator working with messages
+            var parsedMessage = MessageSerializer.Deserialize(message); //TODO create MessageOperator working with messages
 
             return true;
         }
@@ -43,7 +38,7 @@ namespace Client_Server_Refactored.Server
         {
             if (!_stream.CanWrite) return false;
 
-            List<byte> messageToSend = new List<byte>(_serializer.Serialize(message));
+            List<byte> messageToSend = new List<byte>(MessageSerializer.Serialize(message));
             messageToSend.InsertRange(0, BitConverter.GetBytes(messageToSend.Count));
 
             _stream.Write(new Span<byte>(messageToSend.ToArray()));

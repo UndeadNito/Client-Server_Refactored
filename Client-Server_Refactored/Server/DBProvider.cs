@@ -17,7 +17,7 @@ namespace Client_Server_Refactored.Server
             return this;
         }
 
-        private static MySqlDataReader ExecuteCommand(string command)
+        private static MySqlDataReader GetData(string command)
         {
             MySqlCommand SQLcommand = new MySqlCommand(command, _connection);
 
@@ -25,34 +25,43 @@ namespace Client_Server_Refactored.Server
             return reader;
         }
 
-        public static ClientLogInData? RequestDataByLogin(string login)
+        private static void SendData(string command)
         {
-            MySqlDataReader reader = ExecuteCommand($"select * from user where login = \'{login}\'");
+            MySqlCommand SQLcommand = new MySqlCommand(command, _connection);
+            SQLcommand.ExecuteNonQuery();
+        }
+
+        public static UserLogInData? RequestDataByLogin(string login)
+        {
+            MySqlDataReader reader = GetData($"select * from user where login = \'{login}\'");
             reader.Read();
             if (!reader.HasRows) { reader.Close(); return null; }
 
-            var userData = new ClientLogInData(
+            var userData = new UserLogInData(
                 reader.GetInt32(0), 
                 reader.GetString(1), 
                 reader.GetString(2), 
                 reader.GetString(3), 
-                reader.GetByte(4));
+                reader.GetByte(4)
+                );
 
             reader.Close();
             return userData;
         }
 
-        public static void AddUser(string login, string salt, string password, int privelegeGroup)
+        public static void AddUser(string login, string salt, string password, int privelege)
         {
-            MySqlDataReader reader = ExecuteCommand("INSERT INTO user (`login`, `salt`, `password`, `securityGroup`) " +
-                                                    $"VALUES (\'{login}\', \'{salt}\', \'{password}\', \'{privelegeGroup}\')");
-            reader.Close();
+            SendData(
+                @$"INSERT INTO user 
+                       (`login`, `salt`, `password`, `securityGroup`)
+                 VALUES
+                       ('{login}', '{salt}', '{password}', '{privelege}')"
+                );
         }
 
         public static void DeleteUser(string login)
         {
-            MySqlDataReader reader = ExecuteCommand($"delete from user where login = \'{login}\'");
-            reader.Close();
+            SendData($"delete from user where login = \'{login}\'");
         }
 
 
