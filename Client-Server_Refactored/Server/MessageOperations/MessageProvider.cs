@@ -4,26 +4,40 @@ namespace Client_Server_Refactored.Server
 {
     internal class MessageProvider
     {
-        private NetworkStream _stream;
+        private readonly NetworkStream _stream;
 
         public MessageProvider(NetworkStream stream)
         {
             _stream = stream;
         }
-        
-        public bool GetMessage()
+
+        public bool NewMessage()
         {
             if (!_stream.CanRead || !_stream.DataAvailable) { return false; }
-
+            return true;
+        }
+        
+        public Dictionary<string, string> GetMessage()
+        {
             Int32 dataLength = GetMessageLength(_stream);
 
             Span<byte> message = stackalloc byte[dataLength];
             _stream.Read(message);
 
-            var parsedMessage = MessageSerializer.Deserialize(message); //TODO create MessageOperator working with messages
+            return MessageSerializer.Deserialize(message);
+        }
 
+        public bool SendMessage(Dictionary<string, string> message)
+        {
+            if (!_stream.CanWrite) return false;
+
+            List<byte> messageToSend = new(MessageSerializer.SerializeToBytes(message));
+            messageToSend.InsertRange(0, BitConverter.GetBytes(messageToSend.Count));
+
+            _stream.Write(new Span<byte>(messageToSend.ToArray()));
             return true;
         }
+
 
         private Int32 GetMessageLength(NetworkStream stream)
         {
@@ -32,17 +46,6 @@ namespace Client_Server_Refactored.Server
             stream.Read(buffer, 0, 4);
 
             return BitConverter.ToInt32(buffer, 0);
-        }
-
-        public bool SendMessage(Dictionary<string, string> message)
-        {
-            if (!_stream.CanWrite) return false;
-
-            List<byte> messageToSend = new List<byte>(MessageSerializer.Serialize(message));
-            messageToSend.InsertRange(0, BitConverter.GetBytes(messageToSend.Count));
-
-            _stream.Write(new Span<byte>(messageToSend.ToArray()));
-            return true;
         }
     }
 }

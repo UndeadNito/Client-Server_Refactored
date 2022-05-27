@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client-Server_Refactored", "Client-Server_Refactored\Client-Server_Refactored.csproj", "{A9161D03-4BCB-4B4D-8E03-671BDC1828D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server_Refactored", "Client-Server_Refactored\Server_Refactored.csproj", "{A9161D03-4BCB-4B4D-8E03-671BDC1828D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

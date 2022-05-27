@@ -6,12 +6,12 @@ namespace Client_Server_Refactored.Server
     internal class TCPServer
     {
         private const int _localPort = 2020;
-        private static readonly IPAddress _localAddress = IPAddress.Parse("127.0.0.1");
+        private static readonly IPAddress _localAddress = 
+            Dns.GetHostEntry(IPAddress.Loopback).AddressList.Last();
 
         private readonly TcpListener _listener;
         private readonly UserManager _manager;
 
-        private static TCPServer? _server;
         private static bool _isActive = false;
         
         public TCPServer()
@@ -26,6 +26,7 @@ namespace Client_Server_Refactored.Server
             _isActive = true;
 
             new Thread(new ThreadStart(MainLoop)).Start();
+            Console.WriteLine("Server online");
         }
 
         public void Stop() 
@@ -40,6 +41,7 @@ namespace Client_Server_Refactored.Server
         {
             if (_listener.Pending()) 
                 _manager.AddUser(_listener.AcceptTcpClient());
+            Thread.Sleep(10);
         }
 
         private void MainLoop()

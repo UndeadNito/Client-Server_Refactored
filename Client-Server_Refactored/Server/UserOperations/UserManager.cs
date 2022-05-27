@@ -12,7 +12,7 @@ namespace Client_Server_Refactored.Server
 
         public static UserManager GetManager()
         {
-            if (instance == null) instance = new UserManager();
+            if (instance == null) instance = new();
 
             return instance;
         }
@@ -23,6 +23,17 @@ namespace Client_Server_Refactored.Server
 
             _operators.Add(newOperator);
             newOperator.StartLoop();
+        }
+
+        public static void DisconnectUser(MessageOperator user) // For admin to delete user
+        {
+            user.Disconnect();
+            DeleteUser(user);
+        }
+
+        public static void DeleteUser(MessageOperator user) // For user to delete himself
+        {
+            _operators.Remove(user);
         }
     }
 }

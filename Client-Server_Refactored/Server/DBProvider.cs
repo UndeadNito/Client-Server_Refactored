@@ -2,43 +2,33 @@
 
 namespace Client_Server_Refactored.Server
 {
-    internal class DBProvider : IDisposable
+    internal class DBProvider
     {
-        private const string connectionString = "Database=cssoft;Uid=requester;Pwd=pass;";
-        private static readonly MySqlConnection _connection = new MySqlConnection(connectionString);
-        private bool _connected = false;
+        private const string connectionString = "Database=cssoftr;Uid=requester;Pwd=pass;host=localhost;";
+        private readonly MySqlConnection _connection = new(connectionString);
+
+        private static DBProvider? _instance;
 
         private DBProvider() { }
 
-        public DBProvider GetDBProvider()
+        public static DBProvider GetDBProvider()
         {
-            if (!_connected) { _connection.Open(); }
+            if (_instance == null) 
+            {
+                _instance = new();
+                _instance._connection.Open();
+            }
 
-            return this;
+            return _instance;
         }
 
-        private static MySqlDataReader GetData(string command)
-        {
-            MySqlCommand SQLcommand = new MySqlCommand(command, _connection);
-
-            MySqlDataReader reader = SQLcommand.ExecuteReader();
-            return reader;
-        }
-
-        private static void SendData(string command)
-        {
-            MySqlCommand SQLcommand = new MySqlCommand(command, _connection);
-            SQLcommand.ExecuteNonQuery();
-        }
-
-        public static UserLogInData? RequestDataByLogin(string login)
+        public UserLogInData? RequestDataByLogin(string login)
         {
             MySqlDataReader reader = GetData($"select * from user where login = \'{login}\'");
             reader.Read();
             if (!reader.HasRows) { reader.Close(); return null; }
 
-            var userData = new UserLogInData(
-                reader.GetInt32(0), 
+            UserLogInData userData = new(
                 reader.GetString(1), 
                 reader.GetString(2), 
                 reader.GetString(3), 
@@ -49,26 +39,48 @@ namespace Client_Server_Refactored.Server
             return userData;
         }
 
-        public static void AddUser(string login, string salt, string password, int privelege)
+        public bool AddUser(string login, string salt, string password, int privilege)
         {
+            if (RequestDataByLogin(login) != null) return false;
+
             SendData(
                 @$"INSERT INTO user 
-                       (`login`, `salt`, `password`, `securityGroup`)
+                       (`login`, `salt`, `password`, `privilege`)
                  VALUES
-                       ('{login}', '{salt}', '{password}', '{privelege}')"
+                       ('{login}', '{salt}', '{password}', '{privilege}')"
+                );
+
+            return true;
+        }
+
+        public bool AddUser(User user)
+        {
+            return AddUser(
+                user.cachedAccountData.login,
+                user.cachedAccountData.salt,
+                user.cachedAccountData.password,
+                user.cachedAccountData.privilege
                 );
         }
 
-        public static void DeleteUser(string login)
+        public void DeleteUser(string login)
         {
             SendData($"delete from user where login = \'{login}\'");
         }
 
 
-        public void Dispose()
+        private MySqlDataReader GetData(string command)
         {
-            _connected = false;
-            _connection.Close();
+            MySqlCommand SQLcommand = new(command, _connection);
+
+            MySqlDataReader reader = SQLcommand.ExecuteReader();
+            return reader;
+        }
+
+        private void SendData(string command)
+        {
+            MySqlCommand SQLcommand = new(command, _connection);
+            SQLcommand.ExecuteNonQuery();
         }
     }
 }
