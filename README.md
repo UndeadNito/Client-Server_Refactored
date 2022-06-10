@@ -4,11 +4,11 @@
 + MySQL server
 + [Client app](https://github.com/UndeadNito/Client_Refactored)
 
-!Method tested on Windows 10!
+> !Method tested on Windows 10!
 
 ## First things first download and install MySQL server. Set it up after:
 
-  + use [DBdump](./DBdump.sql) located the root directory to set up database (you can use HeidiSQL if command line hates you as you hate it)
+  + use [DBdump](./DBdump.sql) located the root directory to set up database (you can use HeidiSQL if command line hates you as much as you hate it)
   + create new user for the app (default: name = requester, password = pass). You will need to specify it in [DBProvider](./Client-Server_Refactored/Server/DBProvider.cs)
   
       ```
@@ -26,3 +26,9 @@
 ## Finally set up [Client app](https://github.com/UndeadNito/Client_Refactored)
 
   + don't forget to read its own [README](https://github.com/UndeadNito/Client_Refactored/blob/master/README.md) file
+
+<br /><br /><br />
+
+# Good to know
+
+  + administrator account: login = admin, password = admin
