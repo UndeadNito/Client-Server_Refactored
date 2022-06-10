@@ -27,6 +27,7 @@
 
     public struct UserLogInData
     {
+        public readonly int id = -1;
         public readonly string login;
         public readonly string salt;
         public readonly string password;
@@ -34,6 +35,15 @@
 
         public UserLogInData(string login, string salt, string password, byte privilege)
         {
+            this.login = login;
+            this.salt = salt;
+            this.password = password;
+            this.privilege = privilege;
+        }
+
+        public UserLogInData(int id, string login, string salt, string password, byte privilege)
+        {
+            this.id = id;
             this.login = login;
             this.salt = salt;
             this.password = password;
