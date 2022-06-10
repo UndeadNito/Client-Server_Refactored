@@ -25,4 +25,4 @@
 
 ## Finally set up [Client app](https://github.com/UndeadNito/Client_Refactored)
 
-  + don't forget to read its own [README](./../../../Client_Refactored/README.md) file
+  + don't forget to read its own [README](https://github.com/UndeadNito/Client_Refactored/blob/master/README.md) file
