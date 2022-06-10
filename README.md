@@ -20,7 +20,7 @@
   
 ## Secondly compile and run server
 
-  + use any .Net compiler to produse `exe` file
+  + use any .Net compiler to produce `exe` file
   + run the file 
 
 ## Finally set up [Client app](https://github.com/UndeadNito/Client_Refactored)
