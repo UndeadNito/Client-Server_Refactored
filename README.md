@@ -4,7 +4,7 @@
 + MySQL server
 + [Client app](https://github.com/UndeadNito/Client_Refactored)
 
-> !Method tested on Windows 10!
+> !Method had tested on Windows 10!
 
 ## First things first download and install MySQL server. Set it up after:
 
